@@ -123,6 +123,11 @@ namespace Plugin {
             string postfixPath = ((VolatilePathPostfix.IsSet() == true) && (VolatilePathPostfix.Value().empty() == false)) ? VolatilePathPostfix.Value(): Callsign.Value();
             return (basePath + postfixPath + '/');
         }
+#ifdef PROCESSCONTAINERS_ENABLED
+        string ProcessContainersPath(const string& basePath) const {
+            return (basePath + ClassName.Value() + '/');
+        }
+#endif
 
     public:
         Core::JSON::String Callsign;

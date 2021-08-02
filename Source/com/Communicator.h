@@ -199,6 +199,9 @@ namespace RPC {
             , _system()
             , _data()
             , _volatile()
+#ifdef PROCESSCONTAINERS_ENABLED
+            , _processContainers()
+#endif
             , _application()
             , _proxyStub()
             , _postMortem()
@@ -211,6 +214,9 @@ namespace RPC {
             const string& systemPath,
             const string& dataPath,
             const string& volatilePath,
+#ifdef PROCESSCONTAINERS_ENABLED
+            const string& processContainersPath,
+#endif
             const string& applicationPath,
             const string& proxyStubPath,
             const string& postMortem)
@@ -220,6 +226,9 @@ namespace RPC {
             , _system(systemPath)
             , _data(dataPath)
             , _volatile(volatilePath)
+#ifdef PROCESSCONTAINERS_ENABLED
+            , _processContainers(processContainersPath)
+#endif
             , _application(applicationPath)
             , _proxyStub(proxyStubPath)
             , _postMortem(postMortem)
@@ -232,6 +241,9 @@ namespace RPC {
             , _system(copy._system)
             , _data(copy._data)
             , _volatile(copy._volatile)
+#ifdef PROCESSCONTAINERS_ENABLED
+            , _processContainers(copy._processContainers)
+#endif
             , _application(copy._application)
             , _proxyStub(copy._proxyStub)
             , _postMortem(copy._postMortem)
@@ -266,6 +278,12 @@ namespace RPC {
         {
             return (_volatile);
         }
+#ifdef PROCESSCONTAINERS_ENABLED
+        inline const string& ProcessContainersPath() const
+        {
+            return (_processContainers);
+        }
+#endif
         inline const string& ApplicationPath() const
         {
             return (_application);
@@ -287,6 +305,9 @@ namespace RPC {
         string _system;
         string _data;
         string _volatile;
+#ifdef PROCESSCONTAINERS_ENABLED
+        string _processContainers;
+#endif
         string _application;
         string _proxyStub;
         string _postMortem;
@@ -565,10 +586,11 @@ namespace RPC {
             {
                 ProcessContainers::IContainerAdministrator& admin = ProcessContainers::IContainerAdministrator::Instance();
 
-                std::vector<string> searchpaths(3);
-                searchpaths[0] = baseConfig.VolatilePath();
-                searchpaths[1] = baseConfig.PersistentPath();
-                searchpaths[2] = baseConfig.DataPath();
+                std::vector<string> searchpaths(4);
+                searchpaths[0] = baseConfig.ProcessContainersPath();
+                searchpaths[1] = baseConfig.VolatilePath();
+                searchpaths[2] = baseConfig.PersistentPath();
+                searchpaths[3] = baseConfig.DataPath();
 
 #ifdef __DEBUG__
                 ContainerConfig config;
@@ -1549,3 +1571,4 @@ namespace RPC {
 }
 
 #endif // __COM_PROCESSLAUNCH_H
+
