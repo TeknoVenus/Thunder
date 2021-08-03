@@ -54,7 +54,7 @@ namespace PluginHost {
                     return (info == nullptr ? config.VolatilePath() : info->VolatilePath(config.VolatilePath()));
                 }));
 #ifdef PROCESSCONTAINERS_ENABLED
-                _variables.insert(std::make_pair("searchPath", [](const Config& config, const Plugin::Config* info) {
+                _variables.insert(std::make_pair("searchpath", [](const Config& config, const Plugin::Config* info) {
                     return (info == nullptr ? config.ProcessContainersPath() : info->ProcessContainersPath(config.ProcessContainersPath()));
                 }));
 #endif
@@ -268,14 +268,14 @@ namespace PluginHost {
                 {
 
                     Add(_T("logging"), &Logging);
-                    Add(_T("searchPath"), &SearchPath);
+                    Add(_T("searchpath"), &SearchPath);
                 }
                 ProcessContainerConfig(const ProcessContainerConfig& copy)
                     : Logging(copy.Logging)
                     , SearchPath(copy.SearchPath)
                 {
                     Add(_T("logging"), &Logging);
-                    Add(_T("searchPath"), &SearchPath);
+                    Add(_T("searchpath"), &SearchPath);
                 }
                 ~ProcessContainerConfig() override = default;
 
