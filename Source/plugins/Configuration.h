@@ -125,7 +125,8 @@ namespace Plugin {
         }
 #ifdef PROCESSCONTAINERS_ENABLED
         string ProcessContainersPath(const string& basePath) const {
-            return (basePath + ClassName.Value() + '/');
+            string postfixPath = ((PersistentPathPostfix.IsSet() == true) && (PersistentPathPostfix.Value().empty() == false)) ? PersistentPathPostfix.Value(): ClassName.Value();
+            return (basePath + postfixPath + '/');
         }
 #endif
 
