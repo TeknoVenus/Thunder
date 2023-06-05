@@ -31,6 +31,7 @@ nav:
     - Configuration: plugin/config.md
     - Subsystems: plugin/subsystems.md
     - ProxyPool: plugin/proxypool.md
+    - Private COM-RPC : plugin/private-comrpc.md
     - Common Utilities:
       - File Handling:
         - Filesystem Interface: utils/files/files.md
@@ -56,10 +57,17 @@ nav:
       - Client development:
         - JSON-RPC: walkthrough/hello-world/client-jsonrpc.md
         - COM-RPC: walkthrough/hello-world/client-comrpc.md
+  - Misc:
+    - Documentation: docs.md
 
 
 markdown_extensions:
   - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 
 theme:
   name: material
