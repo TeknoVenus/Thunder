@@ -16,7 +16,7 @@ Follow the below guidelines when writing documentation:
 	Text you want to show up in the note box
 
 * Use [mermaid](https://mermaid.js.org/) diagrams where possible instead of embedding images
-  * This helps ensure accessibility, loads faster and looks good on all screen sizes
+    * This helps ensure accessibility, loads faster and looks good on all screen sizes
 
 ````
 ``` mermaid

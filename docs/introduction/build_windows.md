@@ -1,10 +1,73 @@
-# Thunder Documentation
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dignissim interdum rhoncus. Aliquam justo neque, dignissim eget risus in, euismod imperdiet metus. Curabitur consectetur, dui vel interdum placerat, justo risus porttitor odio, a tempor risus ligula sit amet ex. Nam a est a quam tincidunt bibendum at eget est. Aenean commodo eleifend dolor, id laoreet felis porta vel. Sed mattis at sem ut ornare. Morbi nec maximus lorem. Aenean eget neque ipsum. Suspendisse sit amet tellus non lectus fermentum accumsan. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla non leo velit. Sed consequat vel risus nec viverra. Nulla iaculis accumsan tincidunt. Vestibulum ac risus orci. In augue turpis, volutpat ac fringilla quis, pretium vitae purus.
+To build Thunder and its components on Windows, you will need Visual Studio installed -  the free community edition is just fine.
 
-Curabitur ut nisl non mi condimentum condimentum. Aliquam erat volutpat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed vestibulum, risus eu aliquam auctor, odio turpis sollicitudin metus, quis suscipit lorem purus non eros. In hac habitasse platea dictumst. Proin fringilla lacus ligula, ut dignissim quam elementum id. Quisque nec faucibus risus. Vivamus finibus, orci ut blandit condimentum, dolor ex volutpat velit, et fringilla justo mauris ut lacus. Nulla id ipsum a nisl blandit lobortis vel eget orci. Ut nec feugiat arcu. Etiam lacinia ullamcorper arcu sed hendrerit. Vivamus et convallis ipsum, condimentum blandit massa.
+The main solution file with all projects and their  dependencies can be found in the [ThunderOnWindows](https://github.com/WebPlatformForEmbedded/ThunderOnWindows) repo. This repository also holds some binaries and the header files required to build the Thunder framework on Windows. 
 
-Ut in varius mauris. Nulla fringilla nunc nec libero semper, non dictum urna ultricies. Morbi tristique ut ex quis tristique. Ut tempus volutpat lectus eu vehicula. Maecenas nunc ligula, sagittis non nulla vitae, convallis interdum erat. Integer dignissim, urna tempor porta tempor, libero augue elementum orci, at pulvinar orci odio vitae nulla. Fusce lacinia tempor sem at sollicitudin. Sed lacus tellus, cursus vitae vehicula a, tincidunt sed justo. Quisque porttitor, urna eget hendrerit viverra, libero justo aliquet nibh, non mattis ligula quam at purus.
+!!! note
+	The `ThunderOnWindows` repo contains some submodules for other Thunder repos. These aren't necessarily kept up to date, so it is recommended to just manually clone the other repos to ensure you get the versions you require
 
-Curabitur ac nibh feugiat, ornare nisl at, mollis nibh. Suspendisse arcu neque, fermentum non nibh at, scelerisque rutrum tortor. Vestibulum ornare dictum turpis ut dapibus. Vivamus tincidunt tempor maximus. Pellentesque ullamcorper, est sit amet iaculis luctus, felis neque pellentesque urna, sit amet auctor arcu dolor id quam. Vestibulum id velit velit. In vel leo non urna pretium dignissim. Vestibulum lobortis diam eu enim lobortis aliquam.
+## 1. Clone All Repositories
 
-Etiam imperdiet risus quis vehicula lobortis. Curabitur porttitor arcu quis velit lacinia pharetra. Integer scelerisque erat nec urna molestie auctor. Praesent varius tempor orci ut semper. Vestibulum dignissim placerat nisi, sed pretium ligula rutrum vel. Donec lacus ex, ullamcorper a libero vel, viverra feugiat lectus. Morbi mattis magna eu augue elementum pretium. Vivamus sapien tellus, rutrum sit amet vehicula nec, sodales in elit. 
+Make a dedicated folder called `ThunderWin` directly on the drive `C:\`, clone ThunderOnWindows into it and change the directory.
+
+```
+mkdir C:\ThunderWin
+cd C:\ThunderWin
+git clone https://github.com/WebPlatformForEmbedded/ThunderOnWindows.git
+cd ThunderOnWindows
+```
+
+Then, clone the remaining repos.
+
+```
+git clone https://github.com/rdkcentral/ThunderTools.git
+git clone https://github.com/rdkcentral/Thunder.git
+git clone https://github.com/rdkcentral/ThunderInterfaces.git
+git clone https://github.com/rdkcentral/ThunderClientLibraries.git
+git clone https://github.com/rdkcentral/ThunderNanoServices.git
+git clone https://github.com/WebPlatformForEmbedded/ThunderNanoServicesRDK.git
+git clone https://github.com/rdkcentral/ThunderUI.git
+```
+
+## 2. Build
+
+The next step is to open the solution file `ThunderOnWindows\Thunder.sln` in  Visual Studio, right click on `Solution Thunder` and build it. This will build all project files in a similar order to the Linux cmake build. 
+
+!!! hint
+	Some of the project names in the Visual Studio solution reflect old project names - e.g. Thunder is known as `Bridge`, reflecting its original WebBridge codename
+
+If you are interested in building only a specific part of  Thunder, for example just ThunderInterfaces, you can build only the `Interfaces` project file and it will automatically build its dependencies, so in this case `bridge`.
+
+## 3. Configure Artifacts
+
+After the building process is finished, you still need to make a few adjustments before running Thunder. One of them is to create a volatile and a persistent directory in a specific location, this can be done with the following commands:
+
+```
+mkdir ..\artifacts\temp
+mkdir ..\artifacts\Persistent
+```
+
+
+Move two dlls with libs into the artifacts folder:
+
+```
+move lib\static_x64\libcrypto-1_1-x64.dll ..\artifacts\Debug\libcrypto-1_1-x64.dll
+move lib\static_x64\libssl-1_1-x64.dll ..\artifacts\Debug\libssl-1_1-x64.dll
+```
+
+To use ThunderUI on Windows, copy it into the artifacts folder:
+
+```
+robocopy ThunderUI\dist ..\artifacts\Debug\Plugins\Controller\UI /S
+```
+
+## 4. Run
+
+Right click on `bridge` project file and select `Properties`. Go into `Debugging` tab, and put the following line into `Command Arguments`:
+
+```
+-f -c "$(ProjectDir)ExampleConfigWindows.json"
+```
+
+![https://camo.githubusercontent.com/66a3000de0d428e7c860e502434b7ca9153adc3b2cabd3c9123e50a007f4a998/68747470733a2f2f692e696d6775722e636f6d2f706267415853562e706e67](https://camo.githubusercontent.com/66a3000de0d428e7c860e502434b7ca9153adc3b2cabd3c9123e50a007f4a998/68747470733a2f2f692e696d6775722e636f6d2f706267415853562e706e67)
+
+Apply the changes, and press `F5` to run Thunder

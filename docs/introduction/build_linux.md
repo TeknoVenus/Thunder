@@ -1,10 +1,214 @@
-# Thunder Documentation
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dignissim interdum rhoncus. Aliquam justo neque, dignissim eget risus in, euismod imperdiet metus. Curabitur consectetur, dui vel interdum placerat, justo risus porttitor odio, a tempor risus ligula sit amet ex. Nam a est a quam tincidunt bibendum at eget est. Aenean commodo eleifend dolor, id laoreet felis porta vel. Sed mattis at sem ut ornare. Morbi nec maximus lorem. Aenean eget neque ipsum. Suspendisse sit amet tellus non lectus fermentum accumsan. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla non leo velit. Sed consequat vel risus nec viverra. Nulla iaculis accumsan tincidunt. Vestibulum ac risus orci. In augue turpis, volutpat ac fringilla quis, pretium vitae purus.
+These instructions should work on Raspberry PI or any Linux distribution.
 
-Curabitur ut nisl non mi condimentum condimentum. Aliquam erat volutpat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed vestibulum, risus eu aliquam auctor, odio turpis sollicitudin metus, quis suscipit lorem purus non eros. In hac habitasse platea dictumst. Proin fringilla lacus ligula, ut dignissim quam elementum id. Quisque nec faucibus risus. Vivamus finibus, orci ut blandit condimentum, dolor ex volutpat velit, et fringilla justo mauris ut lacus. Nulla id ipsum a nisl blandit lobortis vel eget orci. Ut nec feugiat arcu. Etiam lacinia ullamcorper arcu sed hendrerit. Vivamus et convallis ipsum, condimentum blandit massa.
+These instructions are designed for R4 or newer. Older versions of Thunder may differ.
 
-Ut in varius mauris. Nulla fringilla nunc nec libero semper, non dictum urna ultricies. Morbi tristique ut ex quis tristique. Ut tempus volutpat lectus eu vehicula. Maecenas nunc ligula, sagittis non nulla vitae, convallis interdum erat. Integer dignissim, urna tempor porta tempor, libero augue elementum orci, at pulvinar orci odio vitae nulla. Fusce lacinia tempor sem at sollicitudin. Sed lacus tellus, cursus vitae vehicula a, tincidunt sed justo. Quisque porttitor, urna eget hendrerit viverra, libero justo aliquet nibh, non mattis ligula quam at purus.
+!!! note
+	The Thunder projects can be customized with additional cmake options `-D`. To obtain a list of all possible project-specific options, add `-L` to the `cmake` commands below.
+	
+	The cmake commands can contain many options, so it is convenient to format them into separate lines with `\`.
 
-Curabitur ac nibh feugiat, ornare nisl at, mollis nibh. Suspendisse arcu neque, fermentum non nibh at, scelerisque rutrum tortor. Vestibulum ornare dictum turpis ut dapibus. Vivamus tincidunt tempor maximus. Pellentesque ullamcorper, est sit amet iaculis luctus, felis neque pellentesque urna, sit amet auctor arcu dolor id quam. Vestibulum id velit velit. In vel leo non urna pretium dignissim. Vestibulum lobortis diam eu enim lobortis aliquam.
+## Build & Installation
 
-Etiam imperdiet risus quis vehicula lobortis. Curabitur porttitor arcu quis velit lacinia pharetra. Integer scelerisque erat nec urna molestie auctor. Praesent varius tempor orci ut semper. Vestibulum dignissim placerat nisi, sed pretium ligula rutrum vel. Donec lacus ex, ullamcorper a libero vel, viverra feugiat lectus. Morbi mattis magna eu augue elementum pretium. Vivamus sapien tellus, rutrum sit amet vehicula nec, sodales in elit. 
+The following instructions will use the `CMAKE_INSTALL_PREFIX` option to install Thunder in a subdirectory of the current working directory instead of in the system-wide directories. This is recommended for development, but for production use you may need to change/remove this option to install Thunder in standard linux locations.
+
+### 1.  Install Dependencies
+
+These instructions are based on Ubuntu 22.04 - you may need to change this for your distros package manager
+
+```
+$ sudo apt install build-essential cmake ninja-build libusb-1.0-0-dev zlib1g-dev libssl-dev
+```
+
+### 2. Build  Thunder Tools
+Thunder Tools are various scripts and code generators used to build Thunder and any plugins. In older Thunder versions, they lived inside the main Thunder repo but have now been moved to their own repo.
+
+First, change the directory to where you want to build Thunder.
+
+Then clone ThunderTools repo:
+```shell
+$ git clone https://github.com/rdkcentral/ThunderTools.git
+```
+Next, we need to run the following commands to build and then install the code generators inside ThunderTools:
+```shell
+$ cmake -G Ninja -S ThunderTools -B build/ThunderTools -DCMAKE_INSTALL_PREFIX="install/usr"
+
+$ cmake --build build/ThunderTools --target install
+```
+
+### 3. Build Thunder
+
+Clone the Thunder repo:
+
+```shell
+$ git clone https://github.com/rdkcentral/Thunder.git
+```
+
+Run the following commands to build and then install Thunder. The available `-DCMAKE_BUILD_TYPE` options are: `[Debug, Release, MinSizeRel]`.
+
+```shell
+$ cmake -G Ninja -S Thunder -B build/Thunder \
+-DBINDING="127.0.0.1" \
+-DCMAKE_BUILD_TYPE="Debug" \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules" \
+-DDATA_PATH="${PWD}/install/usr/share/WPEFramework" \
+-DPERSISTENT_PATH="${PWD}/install/var/wpeframework" \
+-DPORT="55555" \
+-DPROXYSTUB_PATH="${PWD}/install/usr/lib/wpeframework/proxystubs" \
+-DSYSTEM_PATH="${PWD}/install/usr/lib/wpeframework/plugins" \
+-DVOLATILE_PATH="tmp"
+
+$ cmake --build build/Thunder --target install
+```
+
+### 4. Build ThunderInterfaces
+
+!!! note
+	The ThunderInterfaces repo is tagged/versioned the same as the main Thunder repo. So if you are using Thunder R4.1 for example, you should also use the R4.1 tag of ThunderInterfaces
+
+Clone the ThunderInterfaces repo:
+
+```shell
+$ git clone https://github.com/rdkcentral/ThunderInterfaces.git
+```
+
+Run the following commands to build and then install ThunderInterfaces:
+
+```shell
+$ cmake -G Ninja -S ThunderInterfaces -B build/ThunderInterfaces \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules"
+
+$ cmake --build build/ThunderInterfaces --target install
+```
+
+### 5. Build Plugins
+
+The exact repo and steps here will depend on exactly which plugins you want to build. 
+
+As an example, below are the steps to build plugins from Metrological's ThunderNanoServices repository
+
+Clone the ThunderNanoServices repo:
+```shell
+$ git clone https://github.com/rdkcentral/ThunderNanoServices.git
+```
+
+Run the following commands to build and then install ThunderNanoServices:
+
+In the command below, there is a complete list of plugins that do not require any outside dependencies; therefore, each of them can be successfully built in this simple fashion. However, you should customise this to include the plugins you require for your platform.
+
+```shell
+$ cmake -G Ninja -S ThunderNanoServices -B build/ThunderNanoServices \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules" \
+-DPLUGIN_COMMANDER=ON \
+-DPLUGIN_DHCPSERVER=ON \
+-DPLUGIN_DIALSERVER=ON \
+-DPLUGIN_DICTIONARY=ON \
+-DPLUGIN_FILETRANSFER=ON \
+-DPLUGIN_IOCONNECTOR=ON \
+-DPLUGIN_INPUTSWITCH=ON \
+-DPLUGIN_NETWORKCONTROL=ON \
+-DPLUGIN_PROCESSMONITOR=ON \
+-DPLUGIN_RESOURCEMONITOR=ON \
+-DPLUGIN_SYSTEMCOMMANDS=ON \
+-DPLUGIN_SWITCHBOARD=ON \
+-DPLUGIN_WEBPROXY=ON \
+-DPLUGIN_WEBSERVER=ON \
+-DPLUGIN_WEBSHELL=ON \
+-DPLUGIN_WIFICONTROL=ON
+
+$ cmake --build build/ThunderNanoServices --target install
+```
+
+### 6. Build Thunder Client Libraries (optional)
+
+If you require a convenience library from the ThunderClientLibraries repo, follow the below steps:
+
+Clone the ThunderClientLibraries repo:
+
+```
+$ git clone https://github.com/rdkcentral/ThunderClientLibraries.git
+```
+
+Run the following commands to build and then install ThunderClientLibraries:
+
+In the command below, there is a complete list of client libraries that do not require any outside dependencies; therefore, each of them can be successfully built in this simple  fashion.
+
+```shell
+$ cmake -G Ninja -S ThunderClientLibraries -B build/ThunderClientLibraries \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules" \
+-DBLUETOOTHAUDIOSINK=ON \
+-DDEVICEINFO=ON \
+-DDISPLAYINFO=ON \
+-DLOCALTRACER=ON \
+-DSECURITYAGENT=ON \
+-DPLAYERINFO=ON \
+-DPROTOCOLS=ON \
+-DVIRTUALINPUT=ON
+
+$cmake --build build/ThunderClientLibraries --target install
+```
+
+
+
+### 7. Build Thunder UI (optional)
+
+Clone the ThunderUI repo:
+
+```shell
+$ git clone https://github.com/rdkcentral/ThunderUI.git
+```
+
+First, you have to install NodeJS + NPM, and this can be done with the following command:
+
+```shell
+$ sudo apt install nodejs npm
+```
+
+Run the following commands to build and then install ThunderUI:
+
+```shell
+$ cmake -G Ninja -S ThunderUI -B build/ThunderUI \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules"
+
+$ cmake --build build/ThunderUI --target install
+```
+
+
+## Run Thunder
+
+After everything has been built and installed correctly, we can run Thunder.
+
+Since we installed Thunder in a custom installation directory, we need to provide an `LD_LIBRARY_PATH` to that location and set `PATH` to include the `bin` directory. If the libraries are installed in system-wide locations (e.g. `/usr/lib` and `/usr/bin`) then those environment variables are not required
+
+```shell
+$ export LD_LIBRARY_PATH=${PWD}/install/usr/lib:${LD_LIBRARY_PATH}
+$ export PATH=${PWD}/install/usr/bin:${PATH}
+
+$ WPEFramework -f -c ${PWD}/install/etc/WPEFramework/config.json
+```
+
+The following arguments should be specified to the WPEFramework binary:
+
+* `-f`: Flush plugin messages/logs directly to the console - useful for debugging. In production, you should use the `MessageControl` plugin to forward messages to a suitable sink. 
+* `-c`: Path to WPEFramework config file
+
+All being well, you should see Thunder start up:
+
+```
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:584]:[main]:[Startup]: WPEFramework
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:585]:[main]:[Startup]: Starting time: Tue, 06 Jun 2023 09:04:31 GMT
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:586]:[main]:[Startup]: Process Id:    25382
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:587]:[main]:[Startup]: Tree ref:      engineering_build_for_debug_purpose_only
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:588]:[main]:[Startup]: Build ref:     engineering_build_for_debug_purpose_only
+[Tue, 06 Jun 2023 10:04:31]:[PluginHost.cpp:589]:[main]:[Startup]: Version:       4:0:0
+...
+[Tue, 06 Jun 2023 10:04:32]:[PluginHost.cpp:609]:[main]:[Startup]: WPEFramework actively listening
+```
+
+If you followed these instructions, Thunder will be listening for web requests on `localhost:55555`
+
+To exit the framework, press `q` and then `enter`.
