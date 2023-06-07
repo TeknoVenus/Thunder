@@ -1,6 +1,7 @@
 # What is Thunder?
 !!! note
 	The terms "**Thunder**" and "**WPEFramework**" may be used interchangeably throughout this documentation. The project was originally known as WPEFramework (since it was developed by the Web Platform for Embedded, or WPE, team).	The name was changed to Thunder when it was incorporated into RDK, but the code still uses the name WPEFramework internally. 
+
 ## Introduction
 
 Thunder (aka WPEFramework) is developed by [Metrological](https://www.metrological.com/) (a Comcast company), and provides a way for STB operators to implement business-logic in a modular way using plugins, and a consistent way for applications to control and query those plugins. By using a plugin-based architecture, it is possible to build a device with only the specific features that are required for that particular device.

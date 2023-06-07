@@ -11,7 +11,8 @@
             "request": "launch",
             "program": "${config:thunder.installPath}/usr/bin/WPEFramework",
             "args": [
-                "-c${config:thunder.installPath}/etc/WPEFramework/config.json"
+                "-c${config:thunder.installPath}/etc/WPEFramework/config.json",
+                "-F"
              ],
             "stopAtEntry": false,
             "cwd": "${config:thunder.installPath}",

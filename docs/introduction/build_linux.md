@@ -1,6 +1,6 @@
-These instructions should work on Raspberry PI or any Linux distribution.
+These instructions are written for Ubuntu 22.04, but should work on the Raspberry Pi or any other Linux distribution.
 
-These instructions are designed for R4 or newer. Older versions of Thunder may differ.
+These instructions are designed for Thunder R4 or newer. Older versions of Thunder may differ.
 
 !!! note
 	The Thunder projects can be customized with additional cmake options `-D`. To obtain a list of all possible project-specific options, add `-L` to the `cmake` commands below.
@@ -19,7 +19,14 @@ These instructions are based on Ubuntu 22.04 - you may need to change this for y
 $ sudo apt install build-essential cmake ninja-build libusb-1.0-0-dev zlib1g-dev libssl-dev
 ```
 
+Thunder also uses Python 3 for code and documentation generation scripts. Ensure you have at least **Python 3.5** installed and install the [**jsonref**](https://pypi.org/project/jsonref/) library with pip:
+
+```
+$ pip install jsonref
+```
+
 ### 2. Build  Thunder Tools
+
 Thunder Tools are various scripts and code generators used to build Thunder and any plugins. In older Thunder versions, they lived inside the main Thunder repo but have now been moved to their own repo.
 
 First, change the directory to where you want to build Thunder.
@@ -86,16 +93,16 @@ $ cmake --build build/ThunderInterfaces --target install
 
 The exact repo and steps here will depend on exactly which plugins you want to build. 
 
-As an example, below are the steps to build plugins from Metrological's ThunderNanoServices repository
+#### ThunderNanoServices
 
 Clone the ThunderNanoServices repo:
 ```shell
 $ git clone https://github.com/rdkcentral/ThunderNanoServices.git
 ```
 
-Run the following commands to build and then install ThunderNanoServices:
+Run the following commands to build and then install ThunderNanoServices. 
 
-In the command below, there is a complete list of plugins that do not require any outside dependencies; therefore, each of them can be successfully built in this simple fashion. However, you should customise this to include the plugins you require for your platform.
+In the command below, there is a complete list of plugins that do not require any outside software/hardware dependencies. However, you should customise this to include the plugins you require for your platform.
 
 ```shell
 $ cmake -G Ninja -S ThunderNanoServices -B build/ThunderNanoServices \
@@ -119,6 +126,34 @@ $ cmake -G Ninja -S ThunderNanoServices -B build/ThunderNanoServices \
 -DPLUGIN_WIFICONTROL=ON
 
 $ cmake --build build/ThunderNanoServices --target install
+```
+
+#### ThunderNanoServicesRDK
+
+Clone the ThunderNanoServicesRDK repo:
+
+```
+$ git clone https://github.com/WebPlatformForEmbedded/ThunderNanoServicesRDK.git
+```
+
+Run the following commands to build and then install ThunderNanoServicesRDK.
+
+In the command below, there is a complete list of plugins that do not require any outside software/hardware dependencies. However, you should customise this to include the plugins you require for your platform.
+
+```shell
+$ cmake -G Ninja -S ThunderNanoServicesRDK -B build/ThunderNanoServicesRDK \
+-DCMAKE_INSTALL_PREFIX="install/usr" \
+-DCMAKE_MODULE_PATH="${PWD}/install/usr/include/WPEFramework/Modules" \
+-DPLUGIN_DEVICEIDENTIFICATION=ON \
+-DPLUGIN_DEVICEINFO=ON \
+-DPLUGIN_LOCATIONSYNC=ON \
+-DPLUGIN_MESSAGECONTROL=ON \
+-DPLUGIN_MESSENGER=ON \
+-DPLUGIN_MONITOR=ON \
+-DPLUGIN_OPENCDMI=ON \
+-DPLUGIN_PERFORMANCEMETRICS=ON
+
+$ cmake --build build/ThunderNanoServicesRDK --target install
 ```
 
 ### 6. Build Thunder Client Libraries (optional)
@@ -150,8 +185,6 @@ $ cmake -G Ninja -S ThunderClientLibraries -B build/ThunderClientLibraries \
 
 $cmake --build build/ThunderClientLibraries --target install
 ```
-
-
 
 ### 7. Build Thunder UI (optional)
 

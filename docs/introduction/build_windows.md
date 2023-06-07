@@ -5,7 +5,17 @@ The main solution file with all projects and their  dependencies can be found in
 !!! note
 	The `ThunderOnWindows` repo contains some submodules for other Thunder repos. These aren't necessarily kept up to date, so it is recommended to just manually clone the other repos to ensure you get the versions you require
 
-## 1. Clone All Repositories
+## 1. Install Dependencies
+Thunder uses Python 3 for code and documentation generation scripts. Ensure you have at least **Python 3.5** installed. On Windows 10 and above, this can be done from the Microsoft Store, see [here](https://learn.microsoft.com/en-us/windows/python/beginners) for instructions.
+
+Install the [**jsonref**](https://pypi.org/project/jsonref/) library with pip:
+
+```
+pip install jsonref
+```
+
+
+## 2. Clone All Repositories
 
 Make a dedicated folder called `ThunderWin` directly on the drive `C:\`, clone ThunderOnWindows into it and change the directory.
 
@@ -28,7 +38,7 @@ git clone https://github.com/WebPlatformForEmbedded/ThunderNanoServicesRDK.git
 git clone https://github.com/rdkcentral/ThunderUI.git
 ```
 
-## 2. Build
+## 3. Build
 
 The next step is to open the solution file `ThunderOnWindows\Thunder.sln` in  Visual Studio, right click on `Solution Thunder` and build it. This will build all project files in a similar order to the Linux cmake build. 
 
@@ -37,7 +47,7 @@ The next step is to open the solution file `ThunderOnWindows\Thunder.sln` in  Vi
 
 If you are interested in building only a specific part of  Thunder, for example just ThunderInterfaces, you can build only the `Interfaces` project file and it will automatically build its dependencies, so in this case `bridge`.
 
-## 3. Configure Artifacts
+## 4. Configure Artifacts
 
 After the building process is finished, you still need to make a few adjustments before running Thunder. One of them is to create a volatile and a persistent directory in a specific location, this can be done with the following commands:
 
@@ -60,7 +70,7 @@ To use ThunderUI on Windows, copy it into the artifacts folder:
 robocopy ThunderUI\dist ..\artifacts\Debug\Plugins\Controller\UI /S
 ```
 
-## 4. Run
+## 5. Run
 
 Right click on `bridge` project file and select `Properties`. Go into `Debugging` tab, and put the following line into `Command Arguments`:
 

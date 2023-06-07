@@ -1,5 +1,5 @@
 site_name: Thunder (WPEFramework)
-site_url: https://teknovenus.github.com/Thunder
+site_url: https://rdkcentral.github.com/Thunder
 
 repo_name: rdkcentral/Thunder
 repo_url: https://github.com/rdkcentral/Thunder/
@@ -12,10 +12,13 @@ nav:
       - Repository Structure: introduction/repos.md
       - Linux Build: introduction/build_linux.md
       - Windows Build: introduction/build_windows.md
+      - Configuration: introduction/config.md
     - Architecture:
       - Overview: introduction/architecture/overview.md
       - Plugin Execution Modes: introduction/architecture/plugin_modes.md
-      - RPC Protocols: introduction/architecture/rpc.md
+      - RPC Protocols:
+        - JSON-RPC: introduction/architecture/rpc/jsonrpc.md
+        - COM-RPC: introduction/architecture/rpc/comrpc.md
   - Plugin Development:
     - Introduction: plugin/intro.md
     - Plugin Lifecycle: plugin/lifecycle.md
@@ -32,17 +35,20 @@ nav:
     - Subsystems: plugin/subsystems.md
     - ProxyPool: plugin/proxypool.md
     - Private COM-RPC : plugin/private-comrpc.md
-    - Common Utilities:
-      - File Handling:
-        - Filesystem Interface: utils/files/files.md
-        - File Observer: utils/files/observer.md
-      - JSON Parser: utils/json.md
-      - Threading:
-        - Thread/Worker Pool: utils/threading/threading.md
-        - Mutexes: utils/threading/mutex.md
-      - Timers: utils/timers.md
-      - Network Sockets: utils/networking.md
-      - Processes: utils/processes.md
+    - Composite Plugins: plugin/composite.md
+  - Common Utilities:
+    - Strings: utils/strings.md
+    - File Handling:
+      - Filesystem Interface: utils/files/files.md
+      - File Observer: utils/files/observer.md
+    - JSON Parser: utils/json.md
+    - Threading:
+      - Worker Pool: utils/threading/worker-pool.md
+      - Mutexes: utils/threading/mutex.md
+    - Timers: utils/timers.md
+    - Web Requests: utils/web.md
+    - Network Sockets: utils/networking.md
+    - Processes: utils/processes.md
   - Client Development:
     - Introduction: client/intro.md
     - JSON-RPC App: client/json-rpc.md
@@ -63,11 +69,16 @@ nav:
 
 markdown_extensions:
   - admonition
+  - pymdownx.details
+  - def_list
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_css:
+  - stylesheets/extra.css
 
 theme:
   name: material
@@ -76,6 +87,7 @@ theme:
     - navigation.sections
     - toc.follow
     - navigation.top
+    - content.code.copy
   icon:
     repo: fontawesome/brands/github
   palette:
