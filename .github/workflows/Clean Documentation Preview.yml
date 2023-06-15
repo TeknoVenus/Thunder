@@ -2,7 +2,7 @@
 # For security, we do not want to checkout and run code from forks (could lead to secrets being leaked)
 # So split documentation build/preview into discrete steps
 
-name: Deploy documentation preview
+name: Clean documentation preview
 
 # If the documentation build completed successfully, then upload it to github pages
 on:

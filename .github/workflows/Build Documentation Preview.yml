@@ -41,7 +41,7 @@ jobs:
           path: ./pr_preview_site
           retention-days: 1
       # Fire an event to trigger the preview upload securely
-     - name: Repository Dispatch
+      - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: upload-preview
@@ -51,7 +51,7 @@ jobs:
     if: ${{ github.event_name == 'closed' }}
     runs-on: ubuntu-latest
     steps:
-     - name: Repository Dispatch
+      - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: clean-preview
