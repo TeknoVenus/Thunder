@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   build-preview:
-    if: ${{ github.event_name != 'closed' }}
+    if: ${{ github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,7 +43,7 @@ jobs:
           event-type: upload-preview
           client-payload: '{"pr": ${{ github.event.number }}, "runId": ${{ github.run_id }}}'
   clean-preview:
-    if: ${{ github.event_name == 'closed' }}
+    if: ${{ github.event.action == 'closed' }}
     runs-on: ubuntu-latest
     steps:
       # Fire an event to trigger the preview removal securely
