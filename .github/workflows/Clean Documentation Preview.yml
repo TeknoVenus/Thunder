@@ -23,6 +23,7 @@ jobs:
         with:
           run_id: ${{ github.event.client_payload.runId }}
           name: preview_site
+          path: ./site
       - name: Deploy preview
         uses: access-nri/pr-preview-action@v2
         with:
