@@ -21,7 +21,7 @@ jobs:
       - name: Download built site
         uses: dawidd6/action-download-artifact@v2
         with:
-          run_id: ${{github.event.workflow_run.id }}
+          run_id: ${{ github.event.client_payload.runId }}
           name: preview_site
       - name: Deploy preview
         uses: access-nri/pr-preview-action@v2
