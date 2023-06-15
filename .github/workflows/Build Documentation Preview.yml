@@ -41,7 +41,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: upload-preview
-          client-payload: '{"pr": ${{ github.event.number }}, "runId": ${{ github.event.workflow_run.id }}}'
+          client-payload: '{"pr": ${{ github.event.number }}, "runId": ${{ github.runid }}}'
   clean-preview:
     if: ${{ github.event_name == 'closed' }}
     runs-on: ubuntu-latest
@@ -51,4 +51,4 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           event-type: clean-preview
-          client-payload: '{"pr": ${{ github.event.number }}, "runId": ${{ github.event.workflow_run.id }}}'
+          client-payload: '{"pr": ${{ github.event.number }}, "runId": ${{ github.runid }}}'
