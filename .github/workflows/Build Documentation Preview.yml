@@ -30,15 +30,11 @@ jobs:
           python-version: 3.x
       - run: pip install mkdocs-material
       - run: mkdocs build
-      - name : Save preview site
-        run: |
-          mkdir -p ./pr_preview_site
-          mv site ./pr_preview_site
       - name : Upload preview site artifact
         uses : actions/upload-artifact@v3
         with:
           name: preview_site
-          path: ./pr_preview_site
+          path: ./site
           retention-days: 1
       # Fire an event to trigger the preview upload securely
       - name: Repository Dispatch
@@ -46,11 +42,11 @@ jobs:
         with:
           event-type: upload-preview
           client-payload: '{"pr": ${{ github.event.number }}}'
-  # Remove old previews on PR close
   clean-preview:
     if: ${{ github.event_name == 'closed' }}
     runs-on: ubuntu-latest
     steps:
+      # Fire an event to trigger the preview removal securely
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:

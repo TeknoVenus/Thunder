@@ -9,6 +9,10 @@ on:
   repository_dispatch:
     types: [upload-preview]
 
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
@@ -19,11 +23,9 @@ jobs:
         with:
           run_id: ${{github.event.workflow_run.id }}
           name: preview_site
-      - name: Get PR number
-        run: echo "PR_NUMBER=$(cat ./site/.pr_number)" >> $GITHUB_ENV
       - name: Deploy preview
         uses: access-nri/pr-preview-action@v2
         with:
           source-dir: site
           action: deploy
-          pr-number: ${{ env.PR_NUMBER }}
+          pr-number: ${{ github.event.client_payload.pr }}
